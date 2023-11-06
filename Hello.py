@@ -1,51 +1,30 @@
-# Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022)
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import streamlit as st
-from streamlit.logger import get_logger
+from datetime import datetime
+from ViewsMonth import ViewsMonth
 
-LOGGER = get_logger(__name__)
+# Title of the app
+st.title('Date to month_id')
 
+# User input for the date
+selected_date = st.date_input("Select a date", min_value=datetime(1980,1,1), max_value=datetime(2050,12,31))
 
-def run():
-    st.set_page_config(
-        page_title="Hello",
-        page_icon="👋",
-    )
+# Check if the date is selected
+if selected_date:
+    month_id = ViewsMonth.from_date(selected_date).id
+    text_out = f'''<p>Month_id for {selected_date.year} - {selected_date.month:02} is : <br> 
+    <span style="font-family:Courier; color:White; font-size: 40px;">{month_id}</s></p><p>Other months in {selected_date.year}: <br>'''
+    sub_header = '<span style="font-family:Courier;color:#ced9e4; font-size:12px;">'
+    sub_footer = '</s><br>'
+    for i in range(12):
+        month_id = ViewsMonth.from_year_month(selected_date.year, i+1).id
+        text_out += sub_header+f'{selected_date.year}-{i+1:02} : {month_id}'+sub_footer
+    text_out += "</p>"
+    st.markdown(text_out, unsafe_allow_html=True)
 
-    st.write("# Welcome to Streamlit! 👋")
+    #st.write(f"The week number for {selected_date} is: {week_number}")
+else:
+    # Prompt user to select a date
+    month_id = ViewsMonth.now().id
+    original_title = f'Current month_id is : <span style="font-family:Courier; color:White; font-size: 40px;">{month_id}</s>'
+    st.markdown(original_title, unsafe_allow_html=True)
 
-    st.sidebar.success("Select a demo above.")
-
-    st.markdown(
-        """
-        Streamlit is an open-source app framework built specifically for
-        Machine Learning and Data Science projects.
-        **👈 Select a demo from the sidebar** to see some examples
-        of what Streamlit can do!
-        ### Want to learn more?
-        - Check out [streamlit.io](https://streamlit.io)
-        - Jump into our [documentation](https://docs.streamlit.io)
-        - Ask a question in our [community
-          forums](https://discuss.streamlit.io)
-        ### See more complex demos
-        - Use a neural net to [analyze the Udacity Self-driving Car Image
-          Dataset](https://github.com/streamlit/demo-self-driving)
-        - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
-    """
-    )
-
-
-if __name__ == "__main__":
-    run()
