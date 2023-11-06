@@ -12,8 +12,8 @@ selected_date = st.date_input("Select a date", min_value=datetime(1980,1,1), max
 if selected_date:
     month_id = ViewsMonth.from_date(selected_date).id
     text_out = f'''<p>Month_id for {selected_date.year} - {selected_date.month:02} is : <br> 
-    <span style="font-family:Courier; color:White; font-size: 40px;">{month_id}</s></p><p>Other months in {selected_date.year}: <br>'''
-    sub_header = '<span style="font-family:Courier;color:#ced9e4; font-size:12px;">'
+    <span style="font-family:Courier; font-size: 40px;">{month_id}</s></p><p>Other months in {selected_date.year}: <br>'''
+    sub_header = '<span style="font-family:Courier; font-size:12px;">'
     sub_footer = '</s><br>'
     for i in range(12):
         month_id = ViewsMonth.from_year_month(selected_date.year, i+1).id
